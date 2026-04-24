@@ -39,3 +39,4 @@ tailwind.config.js   # Colors, typography, radii, shadows, gradients pulled from
 ## Design tokens
 
 All colors, fonts, and radii live in `tailwind.config.js` under `theme.extend`. To match additional Figma variables as they're added, extend that file rather than hardcoding values in components.
+# Bet-App
