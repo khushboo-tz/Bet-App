@@ -8,26 +8,41 @@ export default function Splash() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setTimeout(() => navigate('/onboarding'), 2200);
+    const t = setTimeout(() => navigate('/intro'), 2200);
     return () => clearTimeout(t);
   }, [navigate]);
 
   return (
-    <div className="screen-full bg-splash-gradient relative overflow-hidden">
+    <div
+      className="screen-full relative overflow-hidden"
+      style={{
+        // Matches the Figma splash: warm cream, almost monochrome.
+        background:
+          'linear-gradient(203.85deg, #f9f0df 0%, #f3ead5 55%, #ede4cc 100%)',
+      }}
+    >
       <StatusBar tint="dark" />
 
-      {/* Soft lime blob bottom-left, matching Figma splash */}
+      {/* Subtle lime blob at bottom center, exactly as in Figma */}
       <div
         aria-hidden
-        className="absolute -left-[140px] top-[550px] h-[420px] w-[440px] rounded-full blur-2xl opacity-60"
+        className="absolute pointer-events-none"
         style={{
-          background: 'radial-gradient(closest-side, #cdea5c 0%, rgba(205,234,92,0) 70%)',
+          bottom: -120,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 360,
+          height: 300,
+          background:
+            'radial-gradient(closest-side, rgba(205,234,92,0.55), rgba(205,234,92,0) 70%)',
+          filter: 'blur(14px)',
         }}
       />
 
-      <div className="flex flex-col items-center justify-center pt-[230px] px-6 relative">
-        <BetLogo size={140} />
-        <h1 className="mt-8 text-[32px] font-semibold tracking-[-0.6px] text-ink">
+      {/* Logo + wordmark positioned higher up in frame */}
+      <div className="absolute left-0 right-0 flex flex-col items-center" style={{ top: '38%' }}>
+        <BetLogo size={108} />
+        <h1 className="mt-8 text-[30px] font-semibold tracking-[-0.5px] text-ink">
           Bet On You
         </h1>
         <p className="mt-2 text-[14px] leading-5 text-ink-muted text-center">

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StatusBar from '../components/StatusBar';
 import HomeIndicator from '../components/HomeIndicator';
+import { useAuth } from '../auth';
 
 type Tab = 'feed' | 'heatmap';
 
@@ -43,20 +44,62 @@ const FEED = [
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>('feed');
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuth();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDown = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [menuOpen]);
+
+  const doLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
 
   return (
     <div className="screen-full bg-paper relative pb-24">
       <StatusBar tint="dark" />
 
       {/* Header */}
-      <div className="px-6 pt-2 flex items-center justify-between">
+      <div className="px-6 pt-2 flex items-center justify-between relative">
         <div>
           <div className="text-[12px] text-ink-subtle">Morning,</div>
           <div className="text-[22px] font-semibold tracking-[-0.4px] text-ink">Khushboo</div>
         </div>
-        <div className="h-10 w-10 rounded-full bg-lavender-200 grid place-items-center text-[14px] font-semibold text-lavender-500">
-          K
+        <div ref={menuRef} className="relative">
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            className="h-10 w-10 rounded-full bg-lavender-200 grid place-items-center text-[14px] font-semibold text-lavender-500 active:scale-95 transition"
+            aria-label="Account menu"
+          >
+            K
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-12 w-44 rounded-2xl bg-white shadow-card border border-line overflow-hidden z-10">
+              <button className="w-full text-left px-4 py-3 text-[14px] text-ink hover:bg-black/5">
+                Profile
+              </button>
+              <button className="w-full text-left px-4 py-3 text-[14px] text-ink hover:bg-black/5">
+                Settings
+              </button>
+              <div className="h-px bg-line" />
+              <button
+                onClick={doLogout}
+                className="w-full text-left px-4 py-3 text-[14px] text-[#d9477e] hover:bg-black/5 font-medium"
+              >
+                Log out
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
